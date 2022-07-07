@@ -1,4 +1,4 @@
-use anyhow::{Error, Ok, Result};
+use anyhow::{Ok, Result};
 use std::env::current_dir;
 use std::fs::{read_dir, DirEntry};
 
@@ -10,7 +10,7 @@ fn convert_file_into_string(file: DirEntry) -> Result<String> {
     }
 }
 
-fn run() -> Result<(), Error> {
+fn run() -> Result<()> {
     let path = current_dir()?;
     let files = read_dir(path)?;
 
