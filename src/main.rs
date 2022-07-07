@@ -1,32 +1,29 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Error, Ok, Result};
 use std::env::current_dir;
 use std::fs::{read_dir, DirEntry};
 
 fn convert_file_into_string(file: DirEntry) -> Result<String> {
-    let file_name = match file.file_name().into_string() {
-        Ok(name) => name,
-        Err(_) => return Err(anyhow!("Could not convert file name into string")),
-    };
+    let file_name = file.file_name().to_string_lossy().to_string();
     match file.file_type()?.is_dir() {
         true => Ok(format!("\x1b[32m{}\x1b[m/", file_name)),
         false => Ok(file_name),
     }
 }
 
-fn main() {
-    let path = current_dir().expect("Could not get current directory");
-    let files = read_dir(path).expect("Failed to read the directory")
+fn run() -> Result<(), Error> {
+    let path = current_dir()?;
+    let files = read_dir(path)?;
 
     for file in files {
-        let file = file.expect("Failed to read the file");
-
-        let file_name = match convert_file_into_string(file) {
-            Ok(file_name) => file_name,
-            Err(error) => {
-                println!("{}", error);
-                return;
-            }
-        };
+        let file_name = convert_file_into_string(file?)?;
         print!("{}  ", file_name);
+    }
+
+    Ok(())
+}
+
+fn main() {
+    if let Err(e) = run() {
+        eprintln!("ERROR: {}", e);
     }
 }
