@@ -1,6 +1,15 @@
 use anyhow::{Ok, Result};
 use std::env::current_dir;
 use std::fs::{read_dir, DirEntry};
+use std::path::PathBuf;
+use structopt::StructOpt;
+
+#[derive(StructOpt)]
+#[structopt(name = "rsls", about = "Rust Grep command tool")]
+struct Options {
+    #[structopt(name = "FILE")]
+    path: Option<String>,
+}
 
 fn convert_file_into_string(file: DirEntry) -> Result<String> {
     let file_name = file.file_name().to_string_lossy().to_string();
@@ -10,8 +19,11 @@ fn convert_file_into_string(file: DirEntry) -> Result<String> {
     }
 }
 
-fn run() -> Result<()> {
-    let path = current_dir()?;
+fn run(options: Options) -> Result<()> {
+    let path = match options.path {
+        Some(path) => PathBuf::from(path),
+        None => current_dir()?,
+    };
     let files = read_dir(path)?;
 
     for file in files {
@@ -23,7 +35,7 @@ fn run() -> Result<()> {
 }
 
 fn main() {
-    if let Err(e) = run() {
+    if let Err(e) = run(Options::from_args()) {
         eprintln!("ERROR: {}", e);
     }
 }
