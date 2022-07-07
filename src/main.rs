@@ -7,6 +7,12 @@ use structopt::StructOpt;
 #[derive(StructOpt)]
 #[structopt(name = "rsls", about = "LS command made by Rust")]
 struct Options {
+    #[structopt(
+        short = "1",
+        long = "--format=single-column",
+        about = "Display files in a single column"
+    )]
+    is_single_column: bool,
     #[structopt(name = "FILE", parse(from_os_str))]
     path: Option<PathBuf>,
 }
@@ -28,7 +34,10 @@ fn run(options: Options) -> Result<()> {
 
     for file in files {
         let file_name = convert_file_into_string(file?)?;
-        print!("{}  ", file_name);
+        match options.is_single_column {
+            true => println!("{}", file_name),
+            false => print!("{}  ", file_name),
+        }
     }
 
     Ok(())
