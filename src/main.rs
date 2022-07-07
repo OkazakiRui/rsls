@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 
 #[derive(StructOpt)]
-#[structopt(name = "rsls", about = "Rust Grep command tool")]
+#[structopt(name = "rsls", about = "LS command made by Rust")]
 struct Options {
     #[structopt(name = "FILE", parse(from_os_str))]
     path: Option<PathBuf>,
