@@ -9,8 +9,8 @@ fn convert_file_into_string(file: Result<DirEntry, Error>) -> anyhow::Result<Str
         Err(_) => return Err(anyhow::anyhow!("Could not convert file name into string")),
     };
     match file.file_type()?.is_dir() {
-        true => Ok(format!("{}/", file_name).to_string()),
-        false => Ok(file_name.to_string()),
+        true => Ok(format!("{}/", file_name)),
+        false => Ok(file_name),
     }
 }
 
