@@ -31,6 +31,6 @@ fn main() {
                 return;
             }
         };
-        println!("{}", file_name);
+        print!("{}  ", file_name);
     }
 }
