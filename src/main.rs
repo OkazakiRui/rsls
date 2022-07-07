@@ -15,21 +15,11 @@ fn convert_file_into_string(file: DirEntry) -> Result<String> {
 
 fn main() {
     let path = current_dir().expect("Could not get current directory");
-    let files = match read_dir(path) {
-        Ok(files) => files,
-        Err(_) => {
-            println!("Failed to read the directory");
-            return;
-        }
-    };
+    let files = read_dir(path).expect("Failed to read the directory")
+
     for file in files {
-        let file = match file {
-            Ok(file) => file,
-            Err(_) => {
-                println!("Failed to read the file");
-                return;
-            }
-        };
+        let file = file.expect("Failed to read the file");
+
         let file_name = match convert_file_into_string(file) {
             Ok(file_name) => file_name,
             Err(error) => {
