@@ -7,8 +7,8 @@ use structopt::StructOpt;
 #[derive(StructOpt)]
 #[structopt(name = "rsls", about = "Rust Grep command tool")]
 struct Options {
-    #[structopt(name = "FILE")]
-    path: Option<String>,
+    #[structopt(name = "FILE", parse(from_os_str))]
+    path: Option<PathBuf>,
 }
 
 fn convert_file_into_string(file: DirEntry) -> Result<String> {
@@ -21,7 +21,7 @@ fn convert_file_into_string(file: DirEntry) -> Result<String> {
 
 fn run(options: Options) -> Result<()> {
     let path = match options.path {
-        Some(path) => PathBuf::from(path),
+        Some(path) => path,
         None => current_dir()?,
     };
     let files = read_dir(path)?;
